@@ -6,10 +6,7 @@ import java.util.List;
 
 import com.prj.vo.Menu;
 
-/*
- * Database 에 insert, update, delete, select
- */
-public class MenuDAO extends DAO {
+public class OrderDAO extends DAO {
 	
 	// 삽입 insert();
 	public int insert(Menu menu) {
@@ -100,5 +97,6 @@ public class MenuDAO extends DAO {
 		}
 		return menuList;
 	} // end of select
+	
 	
 }

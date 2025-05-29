@@ -9,10 +9,10 @@ public class Order {
 	private String orderInfo;
 
 	// 생성자
-	public void Order() {
+	public Order() {
 	}
 
-	public void Order(int orderNo, String orderName, int orderPrice, String orderInfo) {
+	public Order(int orderNo, String orderName, int orderPrice, String orderInfo) {
 		this.orderNo = orderNo;
 		this.orderName = orderName;
 		this.orderPrice = orderPrice;

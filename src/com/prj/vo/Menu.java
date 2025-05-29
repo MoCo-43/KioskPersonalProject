@@ -7,17 +7,12 @@ public class Menu {
 	private String menuName;
 	private int menuPrice;
 	private String menuInfo;
-	private boolean menuCancel;
+
 
 	// 생성자
 	public Menu() {
 	}
 
-	public void showMenu() {
-		String menuStr = "%d   %s\t\t\t|  %d" + " ￦" + "  | %s";
-		System.out.printf(menuStr, menuNo, menuName, menuPrice, menuPrice);
-	}
-	
 	public Menu(int menuNo, String menuName, int menuPrice, String menuInfo) {
 		this.menuNo = menuNo;
 		this.menuName = menuName;
@@ -25,7 +20,7 @@ public class Menu {
 		this.menuInfo = menuInfo;
 	}
 	
-	// getter
+	//// getter
 	public int getMenuNo() {
 		return menuNo;
 	}
@@ -43,7 +38,7 @@ public class Menu {
 	}
 	
 	
-	// setter
+	//// setter
 	public void setMenuNo(int menuNo) {
 		this.menuNo = menuNo;
 	}
@@ -61,14 +56,5 @@ public class Menu {
 	public void setMenuInfo(String menuInfo) {
 		this.menuInfo = menuInfo;
 	}
-
-
-	// 각종 메소드
-
-	// 주문한 메뉴 취소
-	public boolean isMenuCancel() {
-		return menuCancel;
-	}
-
 	
 }
