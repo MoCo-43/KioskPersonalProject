@@ -10,8 +10,7 @@ public class OrderDAO extends DAO {
 	
 	// 삽입 insert();
 	public int insert(Order order) {
-      String sql = "insert into tbl_order (order_no, order_name, order_price, order_info)"
-      		+ "  values(?,?,?,?)";
+      String sql = "insert into tbl_order (order_no, order_name, order_price, order_info) values(?,?,?,?)";
       		//접속
       		getConnect();
       		try {
@@ -101,7 +100,7 @@ public class OrderDAO extends DAO {
     
 	// 주문조회 orderListSelect()
 	public List<Order> orderListSelect() {
-		 String sql = "select * from tbl_order where order_no = ?";
+		 String sql = "select * from tbl_order";
 		  getConnect();
 		  List<Order> orderList = new ArrayList<>();  // 컬렉션에 저장
 			try {
@@ -113,7 +112,7 @@ public class OrderDAO extends DAO {
 				  selOrder.setOrderName(rs.getString("order_name"));
 				  selOrder.setOrderPrice(rs.getInt("order_price"));
 				  selOrder.setOrderInfo(rs.getString("order_info"));
-				  selOrder.setOrderNo(rs.getInt("order_no"));
+//				  selOrder.setOrderNo(rs.getInt("order_no"));
 				  // 추가
 				  orderList.add(selOrder);
 				}
