@@ -129,7 +129,7 @@ public class OrderDAO extends DAO {
 	// 주문내역집계
 	public Map<String, Integer> getOrderSummary() {
 	    Map<String, Integer> result = new HashMap<>();
-	    String sql = "selct order_name, count(*) as total from tbl_order group by order_name";
+	    String sql = "select order_name, count(*) as total from tbl_order group by order_name";
 	    getConnect();
 	    try {
 	        stmt = conn.createStatement();

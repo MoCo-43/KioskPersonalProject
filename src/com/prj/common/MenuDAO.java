@@ -14,7 +14,7 @@ public class MenuDAO extends DAO {
 	// 삽입 insert();
 	public int insert(Menu menu) {
       String sql = "insert into tbl_menu (menu_no, menu_name, menu_price, menu_info)"
-      		+ "  values(?,?,?,?,?)";
+      		+ "  values(?,?,?,?)";
       		//접속
       		getConnect();
       		try {
