@@ -2,7 +2,9 @@ package com.prj.common;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.prj.vo.Order;
 
@@ -10,7 +12,7 @@ public class OrderDAO extends DAO {
 	
 	// 삽입 insert();
 	public int insert(Order order) {
-      String sql = "insert into tbl_order (order_no, order_name, order_price, order_info) values(?,?,?,?)";
+	  String sql = "INSERT INTO tbl_order (order_no, order_name, order_price, order_info) VALUES (?, ?, ?, ?)";
       		//접속
       		getConnect();
       		try {
@@ -19,8 +21,9 @@ public class OrderDAO extends DAO {
       			psmt.setString(2, order.getOrderName());
       			psmt.setInt(3, order.getOrderPrice());
       			psmt.setString(4, order.getOrderInfo());
+      			
       			int r = psmt.executeUpdate();
-      			return r;  // 건수 반환
+      			return r;
       		} catch (SQLException e) {
       			e.printStackTrace();
       		} finally {
@@ -98,6 +101,7 @@ public class OrderDAO extends DAO {
 	} // end of select
 	
     
+	
 	// 주문조회 orderListSelect()
 	public List<Order> orderListSelect() {
 		 String sql = "select * from tbl_order";
@@ -119,6 +123,24 @@ public class OrderDAO extends DAO {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-			return orderList;	
+			return orderList;
 	}
+	
+	// 주문내역집계
+	public Map<String, Integer> getOrderSummary() {
+	    Map<String, Integer> result = new HashMap<>();
+	    String sql = "selct order_name, count(*) as total from tbl_order group by order_name";
+	    getConnect();
+	    try {
+	        stmt = conn.createStatement();
+	        rs = stmt.executeQuery(sql);
+	        while (rs.next()) {
+	            result.put(rs.getString("order_name"), rs.getInt("total"));
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return result;
+	}
+	
 }

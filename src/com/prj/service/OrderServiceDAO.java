@@ -21,14 +21,7 @@ public class OrderServiceDAO implements OrderService {
 	// 장바구니 삭제
 	@Override
 	public boolean removeCart(int orderNo) {
-//		for (int i = 0; i < cart.size(); i++) {
-//			if (cart.get(i).getOrderNo() == orderNo) {
-//				cart.remove(i);
-//				return true;
-//			}
-//		}
-//		return false;
-		return odao.delete(orderNo) == 1;
+	  return odao.delete(orderNo) == 1;
 	}
 
 	// 장바구니 목록 조회

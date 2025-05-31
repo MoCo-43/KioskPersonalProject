@@ -12,4 +12,5 @@ public interface OrderService {
   public boolean removeCart(int orderNo);  // 장바구니 삭제
   public List<Order> getCart();  // 장바구니 목록 조회
   public void clearCart();  // 장바구니 비우기
+  
 }

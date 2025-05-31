@@ -1,9 +1,14 @@
 package com.prj.app;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
+import com.prj.service.AdminService;
+import com.prj.service.AdminServiceDAO;
 import com.prj.service.MenuService;
 import com.prj.service.MenuServiceDAO;
 import com.prj.service.OrderService;
@@ -20,36 +25,40 @@ public class MenuApp {
 
 	static MenuService msvc = new MenuServiceDAO();
 	static OrderService osvc = new OrderServiceDAO();
-	static boolean run = true;
+	static AdminService asvc = new AdminServiceDAO();
+	
+	static boolean run = true;  // 실행하기 위한 값
+	static Scanner scanner = new Scanner(System.in);
 
 	public void execute() {
-
 		while (run) {
 			showMainScreen(); // 메인화면 출력
 			int selectNo = 0;
-			Scanner scanner = new Scanner(System.in);
 			selectNo = scanner.nextInt(); scanner.nextLine();
-
+			
 			try {
 				switch (selectNo) {
-				case 0:
-					showAdminMenu(); // 관리자 메뉴
+				case 0: // 관리자 메뉴
+					showAdminMenu(); 
 					break;
+					
 				case 1:
 				case 2:
 				case 3:
 				case 4:
 				case 5:
-				case 6: // 메뉴 선택
-					// 1~6번을 선택시 선택한 메뉴를 장바구니로 넘긴다는 기능을 구현??
+				case 6: // 메뉴 선택(1 ~ 6번)
 					selectMenu(selectNo);
 					break;
+					
 				case 7: // 장바구니 메뉴
-					customerCart(); // 장바구니 메뉴 따로 구현
+					customerCart();
 					break;
+					
 				case 8: // 주문조회
 					orderList();
 					break;
+					
 				case 9: // 주문취소
 					orderCancel();
 					break;
@@ -58,7 +67,8 @@ public class MenuApp {
 				System.out.println("메뉴를 다시 선택해주세요.");
 			}
 		} // end of while
-
+		
+		scanner.close();
 	} // end of execute();
 
 	// 장바구니 메뉴 출력
@@ -70,8 +80,8 @@ public class MenuApp {
 				System.out.println("장바구니가 비어 있습니다.");
 			} else {
 				for (Order order : cart) {
-					String orderStr = "%d   %s\t\t\t\t | %d￦ | %s\n";
-					System.out.printf(orderStr, order.getOrderNo(), order.getOrderName(), order.getOrderPrice(),
+					String orderStr = "     %s\t\t\t\t | %d￦ | %s\n";
+					System.out.printf(orderStr, order.getOrderName(), order.getOrderPrice(),
 							order.getOrderInfo());
 				}
 			}
@@ -79,37 +89,38 @@ public class MenuApp {
 			System.out.println("2. 뒤로가기");
 
 			int selectCart = 0;
-			Scanner scnCart = new Scanner(System.in);
-			selectCart = Integer.parseInt(scnCart.nextLine());
+			selectCart = Integer.parseInt(scanner.nextLine());
 
 			switch (selectCart) {
 			case 1: // 장바구니 추가 후 구매
 				/*
 				 * 장바구니에 없다면 + try catch -> 없는상태에서 추가하면 NoSuchElementException 에러 뜨므로 예외처리
 				 */
-				if (cart.isEmpty()) {
-					System.out.println("장바구니에 아무것도 없습니다. 메뉴를 선택해주세요");
-					break;
-				} else {
-					System.out.println("구매완료");
+				try {					
+					if (cart.isEmpty()) {
+						System.out.println("장바구니에 아무것도 없습니다. 메뉴를 선택해주세요");
+						break;
+					} else {
+						System.out.println("구매완료");
+						break;
+					}
+				} catch (NoSuchElementException e) {
+					System.out.println("번호를 다시 입력해주세요");
 				}
 			case 2: // 메뉴화면으로 돌아가기
-				System.out.println("다시시도하세요");
+				break;
 			}
-			scnCart.close();
+			break;
 		}
 	} // end of customerCart()
 
-	
-	
 	// 주문조회(검색)
 	void orderList() {
 		while (run) {
 			System.out.println("[ SEARCH ORDER ]\n");
 			System.out.println("주문번호를 입력해주세요>> ");
 			int orderSearch = 0;
-			Scanner orderScn = new Scanner(System.in);
-			orderSearch = Integer.parseInt(orderScn.nextLine());
+			orderSearch = Integer.parseInt(scanner.nextLine());
 
 			List<Order> cart = osvc.getCart();
 			if (cart.isEmpty()) {
@@ -123,13 +134,9 @@ public class MenuApp {
 			}
 
 			System.out.println("\n1. Return Menu\t\t\t\t\t\t  | 메뉴 화면으로 돌아가기");
-			Scanner backMenuScn = new Scanner(System.in);
 			int backMenuNum = 0;
-			backMenuNum = Integer.parseInt(backMenuScn.nextLine());
-			switch (backMenuNum) {
-			case 1:
-				orderScn.close();
-				backMenuScn.close();
+			backMenuNum = Integer.parseInt(scanner.nextLine());
+			if (backMenuNum == 1) {
 				break;
 			}
 		}
@@ -137,34 +144,34 @@ public class MenuApp {
 
 	// 주문 취소
 	void orderCancel() {
-		System.out.println("[ !! ORDER CANCEL !! ]");
-		List<Order> cart = osvc.getCart();
-		if (cart.isEmpty()) {
-			System.out.println("\n주문목록이 없습니다.");
-		} else {
-			for (Order order : cart) {
-				String orderStr = "%d   %s\t\t\t\t | %d￦ | %s\n";
-				System.out.printf(orderStr, order.getOrderNo(), order.getOrderName(), order.getOrderPrice(),
-						order.getOrderInfo());
+		while (run) {
+			System.out.println("[ !! ORDER CANCEL !! ]");
+			List<Order> cart = osvc.getCart();
+			if (cart.isEmpty()) {
+				System.out.println("\n주문목록이 없습니다.");
+			} else {
+				for (Order order : cart) {
+					String orderStr = "%d   %s\t\t\t\t | %d￦ | %s\n";
+					System.out.printf(orderStr, order.getOrderNo(), order.getOrderName(), order.getOrderPrice(),
+							order.getOrderInfo());
+				}
 			}
-		}
-		System.out.println("위 메뉴를 주문취소 하시겠습니까?");
-		System.out.println("1. 취소하기");
-		System.out.println("2. 메인메뉴로 돌아가기");
+			System.out.println("위 메뉴를 주문취소 하시겠습니까?");
+			System.out.println("1. 취소하기");
+			System.out.println("2. 메인메뉴로 돌아가기");
 
-		int ocNum = 0;
-		Scanner ocScn = new Scanner(System.in);
-		ocNum = Integer.parseInt(ocScn.nextLine());
-		switch (ocNum) {
-		case 1:
-			osvc.clearCart();
-			System.out.println("\n주문 취소 완료");
-			break;
-		case 2:
+			int ocNum = Integer.parseInt(scanner.nextLine());
+			switch (ocNum) {
+			case 1:
+				osvc.removeCart(int orderNo);
+				osvc.clearCart();
+				System.out.println("\n주문 취소 완료");
+				break;
+			case 2:
+				break;
+			}
 			break;
 		}
-		ocScn.close();
-		execute();
 	} // end of orderCancel()
 
 	// 메뉴선택
@@ -209,11 +216,108 @@ public class MenuApp {
 
 	// 관리자 메뉴
 	void showAdminMenu() {
-		System.out.println("[ Admin Menu ]\n");
-		System.out.println("1. Order List\t\t\t\t\t\t   | 주문 내역 조회");
-		System.out.println("2. Order Cancel\t\t\t\t\t\t   | 주문 내역 취소");
-		System.out.println("3. Order Cancel\t\t\t\t\t\t   | 주문 집계");
-		System.out.println("4. Edit Menu\t\t\t\t\t\t   | 메뉴 수정\n\n");
-		System.out.println("0. Return Menu\t\t\t\t\t\t  | 메뉴 화면으로 돌아가기");
+		Map<String, String> login;
+		login = new HashMap<String, String>();
+		login.put("admin", "kioskADMIN");
+
+		boolean loginCheck = false;
+
+		while (run) {
+			System.out.println("[ LOGIN ]\n");
+			System.out.println("아이디를 입력해주세요>> ");
+			String id = scanner.nextLine();
+			System.out.println("비밀번호를 입력해주세요>> ");
+			String pw = scanner.nextLine();
+
+			if (login.containsKey(id)) {
+				// 키가 존재 => 비밀번호 체크
+				if (login.get(id).equals(pw)) {
+					loginCheck = true;
+					break;
+				}
+				System.out.println("입력하신 비밀번호가 일치하지 않습니다.");
+			} else {
+				System.out.println("로그인 실패했습니다.");
+			}
+			break;
+		}
+
+		while (loginCheck) {
+			System.out.println("[ Admin Menu ]\n");
+			System.out.println("1. Order List\t\t\t\t\t\t   | 주문 내역 조회");
+			System.out.println("2. Order Cancel\t\t\t\t\t\t   | 주문 내역 취소");
+			System.out.println("3. Order Summary\t\t\t\t\t\t   | 주문 집계");
+			System.out.println("4. Edit Menu\t\t\t\t\t\t   | 메뉴 수정\n\n");
+			System.out.println("0. Return Menu\t\t\t\t\t\t  | 메뉴 화면으로 돌아가기");
+
+			int adminMenu = Integer.parseInt(scanner.nextLine());
+			switch (adminMenu) {
+			case 0:
+				break;
+			case 1:
+				// admin 주문내역 조회
+				while (loginCheck) {
+					List<Order> cart = osvc.getCart();
+					if (cart.isEmpty()) {
+						System.out.println("장바구니가 비어 있습니다.");
+					} else {
+						for (Order order : cart) {
+							String orderStr = "%d   %s\t\t\t\t | %d￦ | %s\n";
+							System.out.printf(orderStr, order.getOrderNo(), order.getOrderName(), order.getOrderPrice(),
+									order.getOrderInfo());
+						}
+					}
+					System.out.println("\n1. Return Menu\t\t\t\t\t\t  | 메뉴 화면으로 돌아가기");
+					int backMenuNum = 0;
+					backMenuNum = Integer.parseInt(scanner.nextLine());
+					if (backMenuNum == 1) {
+						break;
+					}
+				}
+				break;
+			case 2:
+				// admin 주문 내역 취소
+				System.out.print("취소할 주문 번호>> ");
+				int orderNo = scanner.nextInt();
+				asvc.cancelOrders(orderNo);
+				break;
+			case 3:
+				// admin 주문 집계
+				Map<String, Integer> stats = asvc.getOrderSummary();
+				for (Map.Entry<String, Integer> entry : stats.entrySet()) {
+				    String name = entry.getKey();
+				    int count = entry.getValue();
+				    System.out.println(name + ": " + count + "개");
+				}
+				break;
+			case 4:
+				// admin 메뉴 수정
+				System.out.print("수정할 메뉴 번호>> ");
+				int menuNo = scanner.nextInt(); scanner.nextLine();
+
+				System.out.print("새 메뉴 이름>> ");
+				String newName = scanner.nextLine();
+
+				System.out.print("새 메뉴 가격>> ");
+				int newPrice = scanner.nextInt(); scanner.nextLine();
+
+				System.out.print("새 메뉴 설명>> ");
+				String newInfo = scanner.nextLine();
+
+				Menu updateMenu = new Menu();
+				updateMenu.setMenuNo(menuNo);
+				updateMenu.setMenuName(newName);
+				updateMenu.setMenuPrice(newPrice);
+				updateMenu.setMenuInfo(newInfo);
+
+				boolean success = msvc.modifyMenu(updateMenu);
+				if (success) {
+					System.out.println("메뉴 수정 완료");
+				} else {
+					System.out.println("메뉴 수정에 실패했습니다. 번호를 다시 확인해주세요");
+				}
+				break;
+			}
+		}
 	} // end of showAdminMenu()
 }
