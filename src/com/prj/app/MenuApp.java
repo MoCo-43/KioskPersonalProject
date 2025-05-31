@@ -296,6 +296,7 @@ public class MenuApp {
 					System.out.println("[ EDIT MENU ]\n\n");
 					System.out.println("1. 메뉴 수정");
 					System.out.println("2. 메뉴 삭제");
+					System.out.println("3. 돌아가기");
 					
 					int edit = Integer.parseInt(scanner.nextLine());
 					if(edit == 1) {
@@ -328,23 +329,19 @@ public class MenuApp {
 					} else if (edit == 2) {
 						System.out.print("삭제할 메뉴 번호>> ");
 						int menuNo = scanner.nextInt(); scanner.nextLine();
-
-						Menu updateMenu = new Menu(menuNo, menuName, menuPrice,menuInfo);
-						updateMenu.setMenuNo(menuNo);
-						updateMenu.setMenuName(newName);
-						updateMenu.setMenuPrice(newPrice);
-						updateMenu.setMenuInfo(newInfo);
-						
-						boolean success = msvc.modifyMenu(updateMenu);
+						boolean success = msvc.removeMenu(menuNo);
 						if (success) {
 							System.out.println("메뉴 수정 완료");
 						} else {
 							System.out.println("메뉴 수정에 실패했습니다. 번호를 다시 확인해주세요");
 						}	
+					} else if (edit == 3) {
+						break;
 					}
 				}
 				break;
 			}
+			break;
 		}
 	} // end of showAdminMenu()
 }
