@@ -7,7 +7,8 @@ import java.sql.*;
 * url, id, pass
 */
 public class DAO {
-	String url = "jdbc:oracle:thin:@localhost:1521:xe";
+//	String url = "jdbc:oracle:thin:@localhost:1521:xe";
+	String url = "jdbc:oracle:thin:@192.168.0.26:1521:xe";
 	String id = "scott";
 	String pass = "tiger";
 	Connection conn;

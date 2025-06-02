@@ -145,6 +145,7 @@ public class MenuApp {
 
 	// 메뉴선택
 	void selectMenu(int selectNo) {
+		while(run) {
 			Menu selMenu = menuList.get(selectNo - 1); // DB에서 가져온 기존 메뉴
 			// Menu → Order 변환
 			Order newOrder = new Order();
@@ -156,7 +157,7 @@ public class MenuApp {
 
 			// 안내 메시지
 			System.out.printf("[ ORDER CONFIRM ]\n장바구니에 추가 완료: %s\n", newOrder.getOrderName());
-
+	       }
 	} // end of selectMenu()
 
 	// 메인화면
@@ -169,7 +170,7 @@ public class MenuApp {
 			System.out.printf(menuStr, menu.getMenuNo(), menu.getMenuName(), menu.getMenuPrice(), menu.getMenuInfo());
 		}
 		System.out.println("\n[ ORDER MENU ]");
-		System.out.println("8. Cart   \t\t\t\t\t\t | 장바구니 확인 및 주문취소");
+		System.out.println("8. Cart   \t\t\t\t\t\t | 장바구니 확인 및 주문하기");
 		System.out.println("9. OrderList   \t\t\t\t\t\t | 주문조회");
 	} // end of showMainScreen()
 
@@ -201,7 +202,7 @@ public class MenuApp {
 			break;
 		}
 
-		while (loginCheck) {
+		while (loginCheck == run) {
 			System.out.println("[ Admin Menu ]\n");
 			System.out.println("1. Order List\t\t\t\t\t\t   | 주문 내역 조회");
 			System.out.println("2. Order Cancel\t\t\t\t\t\t   | 주문 내역 취소");
@@ -215,7 +216,7 @@ public class MenuApp {
 				break;
 			case 1:
 				// admin 주문내역 조회
-				while (loginCheck) {
+				while (loginCheck == run) {
 					List<Order> cart = osvc.getCart();
 					if (cart.isEmpty()) {
 						System.out.println("장바구니가 비어 있습니다.");
@@ -240,11 +241,11 @@ public class MenuApp {
 				break;
 			case 2:
 				// 사용자 주문 취소
-				while (run) {
-					System.out.println("[ !! ORDER CANCEL !! ]");
+				while (loginCheck == run) {
+					System.out.println("[ !! ORDER CANCEL !! ]\n\n");
 					List<Order> cart = osvc.getCart();
 					if (cart.isEmpty()) {
-						System.out.println("\n주문목록이 없습니다.");
+						System.out.println("주문목록이 없습니다.");
 					} else {
 						for (Order order : cart) {
 							String orderStr = "%d   %s\t\t\t\t | %d￦ |\n";
@@ -285,7 +286,7 @@ public class MenuApp {
 				break;
 			case 3:
 				// 메뉴 수정
-				while (loginCheck) {
+				while (loginCheck == run) {
 					System.out.println("[ CURRENT SHOWING MENU ]");
 					menuList = msvc.menuList();
 					for (Menu menu : menuList) {
