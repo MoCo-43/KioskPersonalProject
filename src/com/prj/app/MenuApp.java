@@ -331,6 +331,7 @@ public class MenuApp {
 							} else {
 								System.out.println("메뉴 수정에 실패했습니다. 번호를 다시 확인해주세요");
 							}
+							break;
 						case 2:
 							System.out.print("수정할 메뉴 번호>> ");
 							int updateMenuNo = scanner.nextInt();
@@ -358,6 +359,7 @@ public class MenuApp {
 							} else {
 								System.out.println("메뉴 수정에 실패했습니다. 번호를 다시 확인해주세요");
 							}
+							break;
 						case 3:
 							System.out.print("삭제할 메뉴 번호>> ");
 							int menuNo = scanner.nextInt();
@@ -368,6 +370,7 @@ public class MenuApp {
 							} else {
 								System.out.println("메뉴 수정에 실패했습니다. 번호를 다시 확인해주세요");
 							}
+							break;
 						}
 					} catch (InputMismatchException e) {
 						System.out.println("올바르게 입력해주세요");
