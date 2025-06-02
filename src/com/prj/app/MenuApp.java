@@ -145,7 +145,6 @@ public class MenuApp {
 
 	// 메뉴선택
 	void selectMenu(int selectNo) {
-		while (run) {
 			Menu selMenu = menuList.get(selectNo - 1); // DB에서 가져온 기존 메뉴
 			// Menu → Order 변환
 			Order newOrder = new Order();
@@ -157,8 +156,7 @@ public class MenuApp {
 
 			// 안내 메시지
 			System.out.printf("[ ORDER CONFIRM ]\n장바구니에 추가 완료: %s\n", newOrder.getOrderName());
-			break;
-		}
+
 	} // end of selectMenu()
 
 	// 메인화면
@@ -299,7 +297,7 @@ public class MenuApp {
 					System.out.println("1. 메뉴 추가");
 					System.out.println("2. 메뉴 수정");
 					System.out.println("3. 메뉴 삭제");
-					System.out.println("3. 돌아가기");
+					System.out.println("4. 돌아가기");
 
 					try {
 						int edit = Integer.parseInt(scanner.nextLine());
@@ -370,6 +368,8 @@ public class MenuApp {
 							} else {
 								System.out.println("메뉴 수정에 실패했습니다. 번호를 다시 확인해주세요");
 							}
+							break;
+						case 4:
 							break;
 						}
 					} catch (InputMismatchException e) {
