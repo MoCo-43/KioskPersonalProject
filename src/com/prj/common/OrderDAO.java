@@ -12,7 +12,8 @@ public class OrderDAO extends DAO {
 	
 	// 삽입 insert();
 	public int insert(Order order) {
-	  String sql = "INSERT INTO tbl_order (order_no, order_name, order_price, order_info) VALUES (?, ?, ?, ?)";
+	  String sql = "INSERT INTO tbl_order (order_no, order_name, order_price, order_info)"
+			     + "VALUES (?, ?, ?, ?)";
       		//접속
       		getConnect();
       		try {
@@ -57,27 +58,7 @@ public class OrderDAO extends DAO {
 	        		return 0;  // 반영 X
 	}  // end of update
 	
-//	// 삭제 delete()  원본
-//	public int delete(int orderNo) {
-//	      String sql = "delete from tbl_order"
-//	      		+ "  where order_no = ?";
-//	        		//접속
-//	        		getConnect();
-//	        		try {
-//	        			psmt = conn.prepareStatement(sql);
-//	        			psmt.setInt(1, orderNo);
-//	        			int r = psmt.executeUpdate();
-//	        			return r;  // 건수 반환
-//	        		} catch (SQLException e) {
-//	        			e.printStackTrace();
-//	        		} finally {
-//	        		  disconnect();
-//	        		}
-//	        		return 0;  // 반영 X	
-//	}  // end of delete
-	
-	
-	
+
 	// 삭제 delete();  장바구니 전체 clear
 	public int delete(Order order) {
 	      String sql = "delete from tbl_order";
@@ -97,7 +78,7 @@ public class OrderDAO extends DAO {
 
 	
 	
-	// 목록조회 select();
+	// 목록조회(장바구니 목록 조회) select();
 	public List<Order> select() {
 	  String sql = "select * from tbl_order";
 	  getConnect();
@@ -120,49 +101,69 @@ public class OrderDAO extends DAO {
 		}
 		return orderList;
 	} // end of select
+
+	
+	
+//	// 삭제 delete()  원본
+//	public int delete(int orderNo) {
+//	      String sql = "delete from tbl_order"
+//	      		+ "  where order_no = ?";
+//	        		//접속
+//	        		getConnect();
+//	        		try {
+//	        			psmt = conn.prepareStatement(sql);
+//	        			psmt.setInt(1, orderNo);
+//	        			int r = psmt.executeUpdate();
+//	        			return r;  // 건수 반환
+//	        		} catch (SQLException e) {
+//	        			e.printStackTrace();
+//	        		} finally {
+//	        		  disconnect();
+//	        		}
+//	        		return 0;  // 반영 X	
+//	}  // end of delete	
 	
 
-
-	// 주문조회 orderListSelect()
-	public List<Order> orderListSelect() {
-		 String sql = "select * from tbl_order";
-		  getConnect();
-		  List<Order> orderList = new ArrayList<>();  // 컬렉션에 저장
-			try {
-				psmt = conn.prepareStatement(sql);
-				rs = psmt.executeQuery();  // 조회
-				while(rs.next()) {
-				  Order selOrder = new Order();
-				  selOrder.setOrderNo(rs.getInt("order_no"));
-				  selOrder.setOrderName(rs.getString("order_name"));
-				  selOrder.setOrderPrice(rs.getInt("order_price"));
-				  selOrder.setOrderInfo(rs.getString("order_info"));
+//
+//	// 주문조회 orderListSelect()
+//	public List<Order> orderListSelect() {
+//		 String sql = "select * from tbl_order";
+//		  getConnect();
+//		  List<Order> orderList = new ArrayList<>();  // 컬렉션에 저장
+//			try {
+//				psmt = conn.prepareStatement(sql);
+//				rs = psmt.executeQuery();  // 조회
+//				while(rs.next()) {
+//				  Order selOrder = new Order();
 //				  selOrder.setOrderNo(rs.getInt("order_no"));
-				  // 추가
-				  orderList.add(selOrder);
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-			return orderList;
-	}
+//				  selOrder.setOrderName(rs.getString("order_name"));
+//				  selOrder.setOrderPrice(rs.getInt("order_price"));
+//				  selOrder.setOrderInfo(rs.getString("order_info"));
+////				  selOrder.setOrderNo(rs.getInt("order_no"));
+//				  // 추가
+//				  orderList.add(selOrder);
+//				}
+//			} catch (SQLException e) {
+//				e.printStackTrace();
+//			}
+//			return orderList;
+//	}
 	
-	// 장바구니 전체 비우기
-	public int clearCart() {
-	    String sql = "DELETE FROM tbl_order WHERE order_status = 'CART'";
-	    getConnect();
-	    try {
-	        psmt = conn.prepareStatement(sql);
-	        int r = psmt.executeUpdate();
-	        return r;
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    } finally {
-	        disconnect();
-	    }
-	    return 0;
-	}
-
+//	// 장바구니 전체 비우기
+//	public int clearCart() {
+//	    String sql = "DELETE FROM tbl_order WHERE order_status = 'CART'";
+//	    getConnect();
+//	    try {
+//	        psmt = conn.prepareStatement(sql);
+//	        int r = psmt.executeUpdate();
+//	        return r;
+//	    } catch (SQLException e) {
+//	        e.printStackTrace();
+//	    } finally {
+//	        disconnect();
+//	    }
+//	    return 0;
+//	}
 
 
 //	// 주문내역집계

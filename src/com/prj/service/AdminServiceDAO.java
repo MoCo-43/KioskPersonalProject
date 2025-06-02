@@ -13,22 +13,22 @@ public class AdminServiceDAO implements AdminService {
     
     // 주문취소
 	@Override
-	public boolean cancelOrders() {
-	  return odao.delete() == 1;
+	public boolean cancelOrders(Order order) {
+	  return odao.delete(order) == 1;
 	}
 	
-//	// 주문내역집계
-//	@Override
-//	public Map<String, Integer> getOrderSummary() {
-//	  return odao.getOrderSummary();
-//	}
-//	
 	// 메뉴수정
 	@Override
 	public boolean editMenu(Menu menu) {
 	  return mdao.update(menu) == 1;
 	}
 
-
-
 }
+
+
+//// 주문내역집계
+//@Override
+//public Map<String, Integer> getOrderSummary() {
+//  return odao.getOrderSummary();
+//}
+//

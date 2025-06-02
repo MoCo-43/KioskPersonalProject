@@ -44,6 +44,6 @@ public class OrderDetailDAO extends DAO {
 	        disconnect();
 	    }
 	    return false;
-	}
+	}  // end of deleteByOrderNo
 	
 }
