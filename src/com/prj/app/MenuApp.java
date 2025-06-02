@@ -161,7 +161,7 @@ public class MenuApp {
 
 	// 메인화면
 	void showMainMenu() {
-		System.out.println("Java Caffe에 오신것을 환영합니다.\n메뉴를 선택해주세요");
+		System.out.println("Java Cafe에 오신것을 환영합니다.\n메뉴를 선택해주세요");
 		System.out.println("\n[ MENU ]\n");
 		menuList = msvc.menuList();
 		for (Menu menu : menuList) {
