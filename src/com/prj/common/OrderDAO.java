@@ -57,15 +57,34 @@ public class OrderDAO extends DAO {
 	        		return 0;  // 반영 X
 	}  // end of update
 	
-	// 삭제 delete();
-	public int delete(int orderNo) {
-	      String sql = "delete from tbl_order"
-	      		+ "  where order_no = ?";
+//	// 삭제 delete()  원본
+//	public int delete(int orderNo) {
+//	      String sql = "delete from tbl_order"
+//	      		+ "  where order_no = ?";
+//	        		//접속
+//	        		getConnect();
+//	        		try {
+//	        			psmt = conn.prepareStatement(sql);
+//	        			psmt.setInt(1, orderNo);
+//	        			int r = psmt.executeUpdate();
+//	        			return r;  // 건수 반환
+//	        		} catch (SQLException e) {
+//	        			e.printStackTrace();
+//	        		} finally {
+//	        		  disconnect();
+//	        		}
+//	        		return 0;  // 반영 X	
+//	}  // end of delete
+	
+	
+	
+	// 삭제 delete();  장바구니 전체 clear
+	public int delete(Order order) {
+	      String sql = "delete from tbl_order";
 	        		//접속
 	        		getConnect();
 	        		try {
 	        			psmt = conn.prepareStatement(sql);
-	        			psmt.setInt(1, orderNo);
 	        			int r = psmt.executeUpdate();
 	        			return r;  // 건수 반환
 	        		} catch (SQLException e) {
@@ -75,6 +94,8 @@ public class OrderDAO extends DAO {
 	        		}
 	        		return 0;  // 반영 X	
 	}  // end of delete
+
+	
 	
 	// 목록조회 select();
 	public List<Order> select() {
@@ -100,8 +121,8 @@ public class OrderDAO extends DAO {
 		return orderList;
 	} // end of select
 	
-    
-	
+
+
 	// 주문조회 orderListSelect()
 	public List<Order> orderListSelect() {
 		 String sql = "select * from tbl_order";
@@ -126,21 +147,39 @@ public class OrderDAO extends DAO {
 			return orderList;
 	}
 	
-	// 주문내역집계
-	public Map<String, Integer> getOrderSummary() {
-	    Map<String, Integer> result = new HashMap<>();
-	    String sql = "select order_name, count(*) as total from tbl_order group by order_name";
+	// 장바구니 전체 비우기
+	public int clearCart() {
+	    String sql = "DELETE FROM tbl_order WHERE order_status = 'CART'";
 	    getConnect();
 	    try {
-	        stmt = conn.createStatement();
-	        rs = stmt.executeQuery(sql);
-	        while (rs.next()) {
-	            result.put(rs.getString("order_name"), rs.getInt("total"));
-	        }
+	        psmt = conn.prepareStatement(sql);
+	        int r = psmt.executeUpdate();
+	        return r;
 	    } catch (SQLException e) {
 	        e.printStackTrace();
+	    } finally {
+	        disconnect();
 	    }
-	    return result;
+	    return 0;
 	}
+
+
+
+//	// 주문내역집계
+//	public Map<String, Integer> getOrderSummary() {
+//	    Map<String, Integer> result = new HashMap<>();
+//	    String sql = "select order_name, count(*) as total from tbl_order group by order_name";
+//	    getConnect();
+//	    try {
+//	        stmt = conn.createStatement();
+//	        rs = stmt.executeQuery(sql);
+//	        while (rs.next()) {
+//	            result.put(rs.getString("order_name"), rs.getInt("total"));
+//	        }
+//	    } catch (SQLException e) {
+//	        e.printStackTrace();
+//	    }
+//	    return result;
+//	}
 	
 }

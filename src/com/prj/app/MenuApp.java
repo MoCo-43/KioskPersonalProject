@@ -2,6 +2,7 @@ package com.prj.app;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -32,12 +33,11 @@ public class MenuApp {
 
 	public void execute() {
 		while (run) {
-			showMainScreen(); // 메인화면 출력
+			showMainMenu(); // 메인화면 출력
 			int selectNo = 0;
-			selectNo = scanner.nextInt();
-			scanner.nextLine();
-
 			try {
+			selectNo = scanner.nextInt(); scanner.nextLine();
+
 				switch (selectNo) {
 				case 0: // 관리자 메뉴
 					showAdminMenu();
@@ -52,20 +52,26 @@ public class MenuApp {
 					selectMenu(selectNo);
 					break;
 
-				case 7: // 장바구니 메뉴
-					customerCart();
+				case 8: // 장바구니 메뉴
+				  customerCart();
 					break;
 
-				case 8: // 주문조회
-					orderList();
+				case 9: // 주문조회
+				  orderList();
 					break;
-
-				case 9: // 주문취소
-					orderCancel();
-					break;
+					
+				default: // 지정된 번호 이외를 입력하면 표시하는 문구
+					System.out.println("번호를 다시 입력해 주세요.");
+					continue;
 				}
-			} catch (IndexOutOfBoundsException | NumberFormatException e) {
+			} catch (InputMismatchException e) {  // 숫자이외에 입력되면 표시하는 문구
 				System.out.println("메뉴를 다시 선택해주세요.");
+				scanner.nextLine(); // 잘못된 입력을 소비하여 버퍼를 비움
+	            System.out.println("숫자만 입력해 주세요.");
+	            continue;
+			} catch (NumberFormatException e) {
+	            System.out.println("메뉴를 다시 선택해주세요.");
+	            continue;
 			}
 		} // end of while
 
@@ -111,6 +117,8 @@ public class MenuApp {
 		}
 	} // end of customerCart()
 
+	
+	
 	// 주문조회(검색)
 	void orderList() {
 		while (run) {
@@ -119,9 +127,8 @@ public class MenuApp {
 				System.out.println("장바구니가 비어 있습니다.");
 			} else {
 				for (Order order : cart) {
-					String orderStr = "%d   %s\t\t\t\t | %d￦ | %s\n";
-					System.out.printf(orderStr, order.getOrderNo(), order.getOrderName(), order.getOrderPrice(),
-							order.getOrderInfo());
+					String orderStr = "%d   %s\t\t\t\t | %d￦ |\n";
+					System.out.printf(orderStr, order.getOrderNo(), order.getOrderName(), order.getOrderPrice());
 				}
 			}
 
@@ -134,44 +141,7 @@ public class MenuApp {
 		}
 	} // end of orderList()
 
-	// 주문 취소
-	void orderCancel() {
-		while (run) {
-			System.out.println("[ !! ORDER CANCEL !! ]");
-			List<Order> cart = osvc.getCart();
-			if (cart.isEmpty()) {
-				System.out.println("\n주문목록이 없습니다.");
-			} else {
-				for (Order order : cart) {
-					String orderStr = "%d   %s\t\t\t\t | %d￦ |\n";
-					System.out.printf(orderStr, order.getOrderNo(), order.getOrderName(), order.getOrderPrice());
-				}
-			}
-			System.out.println("위 메뉴를 주문취소 하시겠습니까?");
-			System.out.println("1. 취소하기");
-			System.out.println("2. 메인메뉴로 돌아가기");
-
-			try {
-				int ocNum = Integer.parseInt(scanner.nextLine());
-
-				switch (ocNum) {
-				case 1:
-					osvc.clearCart();
-					System.out.println("\n주문 취소 완료");
-					break;
-				case 2:
-					break;
-				default :
-					System.out.println("올바른 숫자를 입력해주세요");
-				}
-			} catch (NumberFormatException e) {
-				System.out.println("올바른 숫자를 입력해주세요.");
-				continue;
-			}
-			break;
-
-		}
-	} // end of orderCancel()
+	
 
 	// 메뉴선택
 	void selectMenu(int selectNo) {
@@ -187,19 +157,14 @@ public class MenuApp {
 
 			// 안내 메시지
 			System.out.printf("[ ORDER CONFIRM ]\n장바구니에 추가 완료: %s\n", newOrder.getOrderName());
-
 			break;
-			// 메뉴가 강제종료 되니까, 다시 메인메뉴로 돌아가게 하려고
-//	    if (selectNo > 1 && selectNo < 7) {
-//	      execute();	
-//	    } else {
-//	    	
-//	    }
 		}
 	} // end of selectMenu()
 
+	
+	
 	// 메인화면
-	void showMainScreen() {
+	void showMainMenu() {
 		System.out.println("Java Caffe에 오신것을 환영합니다.\n메뉴를 선택해주세요");
 		System.out.println("\n[ MENU ]\n");
 		menuList = msvc.menuList();
@@ -208,11 +173,11 @@ public class MenuApp {
 			System.out.printf(menuStr, menu.getMenuNo(), menu.getMenuName(), menu.getMenuPrice(), menu.getMenuInfo());
 		}
 		System.out.println("\n[ ORDER MENU ]");
-		System.out.println("7. Cart   \t\t\t\t\t\t | 장바구니 확인 및 주문취소");
-		System.out.println("8. OrderList   \t\t\t\t\t\t | 주문조회");
-		System.out.println("9. Cancel  \t\t\t\t\t\t | 주문 모두 취소");
+		System.out.println("8. Cart   \t\t\t\t\t\t | 장바구니 확인 및 주문취소");
+		System.out.println("9. OrderList   \t\t\t\t\t\t | 주문조회");
 	} // end of showMainScreen()
 
+	
 	// 관리자 메뉴
 	void showAdminMenu() {
 		Map<String, String> login;
@@ -245,8 +210,8 @@ public class MenuApp {
 			System.out.println("[ Admin Menu ]\n");
 			System.out.println("1. Order List\t\t\t\t\t\t   | 주문 내역 조회");
 			System.out.println("2. Order Cancel\t\t\t\t\t\t   | 주문 내역 취소");
-			System.out.println("3. Order Summary\t\t\t\t\t\t   | 주문 집계");
-			System.out.println("4. Edit Menu\t\t\t\t\t\t   | 메뉴 수정\n\n");
+//			System.out.println("3. Order Summary\t\t\t\t\t\t   | 주문 집계");
+			System.out.println("3. Edit Menu\t\t\t\t\t\t   | 메뉴 수정\n\n");
 			System.out.println("0. Return Menu\t\t\t\t\t\t  | 메뉴 화면으로 돌아가기");
 
 			int adminMenu = Integer.parseInt(scanner.nextLine());
@@ -261,45 +226,78 @@ public class MenuApp {
 						System.out.println("장바구니가 비어 있습니다.");
 					} else {
 						for (Order order : cart) {
-							String orderStr = "%d   %s\t\t\t\t | %d￦ | %s\n";
-							System.out.printf(orderStr, order.getOrderNo(), order.getOrderName(), order.getOrderPrice(),
-									order.getOrderInfo());
+							String orderStr = "%d   %s\t\t\t\t | %d￦ |\n";
+							System.out.printf(orderStr, order.getOrderNo(), order.getOrderName(), order.getOrderPrice());
 						}
 					}
-					System.out.println("\n1. Return Menu\t\t\t\t\t\t  | 메뉴 화면으로 돌아가기");
+					System.out.println("\n1. Return Menu\t\t\t\t\t\t  | Admin Menu로 돌아가기");
 					int backMenuNum = 0;
 					backMenuNum = Integer.parseInt(scanner.nextLine());
 					if (backMenuNum == 1) {
-						break;
+                     break;
 					}
 				}
 				break;
 			case 2:
-				// admin 주문 내역 취소
-//				System.out.print("취소할 주문 번호>> ");
-//				int orderNo = scanner.nextInt();
-				Order order = new Order();
-				asvc.cancelOrders(order.getOrderNo());
+				// 사용자 주문 취소
+				while (run) {
+					System.out.println("[ !! ORDER CANCEL !! ]");
+					List<Order> cart = osvc.getCart();
+					if (cart.isEmpty()) {
+						System.out.println("\n주문목록이 없습니다.");
+					} else {
+						for (Order order : cart) {
+							String orderStr = "%d   %s\t\t\t\t | %d￦ |\n";
+							System.out.printf(orderStr, order.getOrderNo(), order.getOrderName(), order.getOrderPrice());
+						}
+					}
+					System.out.println("위 메뉴를 주문취소 하시겠습니까?");
+					System.out.println("1. 취소하기");
+					System.out.println("2. 메인메뉴로 돌아가기");
+
+					try {
+						int ocNum = Integer.parseInt(scanner.nextLine());
+
+						switch (ocNum) {
+						case 1:
+							Order rmOrder = new Order();
+							rmOrder.setOrderNo(rmOrder.getOrderNo()); 
+							rmOrder.setOrderName(rmOrder.getOrderName());
+							rmOrder.setOrderPrice(rmOrder.getOrderPrice());
+
+							osvc.removeCart(rmOrder);
+							System.out.println("\n주문 취소 완료");
+							break;
+						case 2:
+							break;
+						default :
+							System.out.println("올바른 숫자를 입력해주세요");
+						}
+					} catch (NumberFormatException e) {
+						System.out.println("올바른 숫자를 입력해주세요.");
+						continue;
+					}
+					break;
+
+				}
+				
 				break;
 			case 3:
-				// admin 주문 집계
-				Map<String, Integer> stats = asvc.getOrderSummary();
-				for (Map.Entry<String, Integer> entry : stats.entrySet()) {
-					String name = entry.getKey();
-					int count = entry.getValue();
-					System.out.println(name + ": " + count + "개");
-				}
-				break;
-			case 4:
-				// admin 메뉴 수정
+				// 메뉴 수정
 				while(loginCheck) {
-					System.out.println("[ EDIT MENU ]\n\n");
+					System.out.println("[ CURRENT SHOWING MENU ]");
+					menuList = msvc.menuList();
+					for (Menu menu : menuList) {
+						String menuStr = "%d   %s\t\t\t\t | %d" + " ￦" + " | %s\n";
+						System.out.printf(menuStr, menu.getMenuNo(), menu.getMenuName(), menu.getMenuPrice(), menu.getMenuInfo());
+					}
+					System.out.println("\n[ EDIT MENU ]");
 					System.out.println("1. 메뉴 수정");
 					System.out.println("2. 메뉴 삭제");
 					System.out.println("3. 돌아가기");
 					
 					int edit = Integer.parseInt(scanner.nextLine());
-					if(edit == 1) {
+					if(edit == 1) { 
 						System.out.print("수정할 메뉴 번호>> ");
 						int menuNo = scanner.nextInt();
 						scanner.nextLine();
@@ -322,11 +320,11 @@ public class MenuApp {
 						
 						boolean success = msvc.modifyMenu(updateMenu);
 						if (success) {
-							System.out.println("메뉴 수정 완료");
+							System.out.println("***메뉴 수정 완료***");
 						} else {
-							System.out.println("메뉴 수정에 실패했습니다. 번호를 다시 확인해주세요");
+							System.out.println("!! 메뉴 수정에 실패했습니다. 번호를 다시 확인해주세요 !!");
 						}
-					} else if (edit == 2) {
+					} else if (edit == 2) {  // 메뉴 삭제
 						System.out.print("삭제할 메뉴 번호>> ");
 						int menuNo = scanner.nextInt(); scanner.nextLine();
 						boolean success = msvc.removeMenu(menuNo);
@@ -335,11 +333,21 @@ public class MenuApp {
 						} else {
 							System.out.println("메뉴 수정에 실패했습니다. 번호를 다시 확인해주세요");
 						}	
-					} else if (edit == 3) {
+					} else if (edit == 3) {  // 돌아가기
 						break;
 					}
 				}
 				break;
+				
+				
+//				// admin 주문 집계
+//				Map<String, Integer> stats = asvc.getOrderSummary();
+//				for (Map.Entry<String, Integer> entry : stats.entrySet()) {
+//					String name = entry.getKey();
+//					int count = entry.getValue();
+//					System.out.println(name + ": " + count + "개");
+//				}
+//				break;
 			}
 			break;
 		}
